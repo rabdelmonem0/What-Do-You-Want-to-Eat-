@@ -41,13 +41,14 @@ window.addEventListener("load", function () {
         clearRecipleList()
     }
 
+   
+
     function startSurveyOut() {
         cardContent.classList.add('hide')
         $('.modal2').addClass('is-active')
         surveyTitle2.innerHTML = "Dining out looks like you wont have dishes to do!"
         recipePage.classList.add('hide')
         clearRecipleList()
-       
     }
 
     function cancelSurvey() {
@@ -56,11 +57,14 @@ window.addEventListener("load", function () {
     }
 
     function saveDineInSurvey() {
-        var americanChoice = document.querySelector('input[name = "american"]:checked').value
-        console.log(americanChoice)
+        let choice = document.getElementById('recipe-page');
+
+        // grab the radio where class contains active
+        // var americanChoice = document.querySelector('input[name = "american"]:checked').value
+        // console.log(americanChoice)
         $(".modal").removeClass('is-active')
-        document.getElementById('american').click()
-        // getRandomRecipe()
+        // document.getElementById('american').click()
+        getRandomRecipe(choice)  //asian
     }
 
     function saveDineOutSurvey() {
@@ -71,14 +75,13 @@ window.addEventListener("load", function () {
         // getRandomRecipe()
     }
 
-//      function getRandomRecipe() {
-//        console.log(americanChoice)
-//        var possibleRecipes = []
-//        var results = []
-//          for (var i = 0; i < recipeCards; i++) {
-//              var ranRecipe = possibleRecipes[Math.floor(Math.random() * possibleRecipes.length)]
-//              results.push(ranRecipe)
-//  }}
+    function getRandomRecipe(choice) {
+        var results = generateCardTemplate(choice)
+        // console.log(americanChoice)
+       
+        var randomRec = results[Math.floor(Math.random() * results.length)]
+        generateCardTemplate(randomRec)   // if generate card template takes in array, pass it an array
+    }
 
     function showRecipePage() {
         cardContent.classList.add('hide')
@@ -246,8 +249,8 @@ window.addEventListener("load", function () {
                         <div class="media-content">
                             <p class="title is-4">${restaurant_name}</p>
                             <p class="subtitle is-6"> ${price_range || "$"}</p>
-                            <p class="subtitle is-6"> ${restaurant_phone}</p>
-                            <p class="subtitle is-6"> ${address.formatted || "N/A"}</p>
+                            <p class="subtitle is-6"> Phone: ${restaurant_phone}</p>
+                            <p class="subtitle is-6"> Adress: ${address.formatted || "N/A"}</p>
                         </div>
                     </div>
                     <div class="content">
