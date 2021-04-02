@@ -55,16 +55,17 @@ window.addEventListener("load", function () {
         cardContent.classList.remove('hide')
         $(".modal").removeClass('is-active')
     }
-
+    
     function saveDineInSurvey() {
-        let choice = document.getElementById('recipe-page');
+        // let choice = document.getElementById('recipe-page');
+        // var choices = generateCardTemplate(recipe)
 
         // grab the radio where class contains active
         // var americanChoice = document.querySelector('input[name = "american"]:checked').value
         // console.log(americanChoice)
         $(".modal").removeClass('is-active')
         // document.getElementById('american').click()
-        getRandomRecipe(choice)  //asian
+        getRandomRecipe()
     }
 
     function saveDineOutSurvey() {
@@ -75,13 +76,84 @@ window.addEventListener("load", function () {
         // getRandomRecipe()
     }
 
-    function getRandomRecipe(choice) {
-        var results = generateCardTemplate(choice)
-        // console.log(americanChoice)
+    function getRandomRecipe() {
+        var list = []
+        var results = getRecipesByList(list)
+        console.log(results)
        
-        var randomRec = results[Math.floor(Math.random() * results.length)]
-        generateCardTemplate(randomRec)   // if generate card template takes in array, pass it an array
+        var singleResult = results[Math.floor(Math.random() * results.length)]
+        console.log(singleResult)
+        // generateSingleCard(singleResult)   // if generate card template takes in array, pass it an array
     }
+
+    // function generateSingleCard(singleResult) {
+    //     const { thumbnail_url, name, cook_time_minutes, description, original_video_url } = singleResult
+
+    //     let html = `
+            
+    //             <div class="card mx-4">
+    //                 <div class="card-image">
+    //                     <figure class="image is-4by3">
+    //                         <img src="${thumbnail_url}" alt="Placeholder image">
+    //                     </figure>
+    //                 </div>
+    //                 <div class="card-content">
+    //                     <div class="media">
+    //                         <div class="media-content">
+    //                             <p class="title is-4">${name}</p>
+    //                             <p class="subtitle is-6"> ${cook_time_minutes || "30"} mins</p>
+    //                         </div>
+    //                     </div>
+    //                     <div class="content">
+    //                         <p id='recipe-detail-1'>${description || "Try this fun recipe out for yourself! Click the button below to start the fun!"}</p>
+    //                         <br>
+    //                         <footer class="card-footer">
+    //                             <a id="view-recipe" class="button" href="${original_video_url}" >View Recipe</a>
+    //                         </footer>
+    //                     </div>
+    //                 </div>
+    //             </div>
+           
+        
+    // `
+
+    //     var template = document.createElement('template');
+    //     html = html.trim(); // Never return a text node of whitespace as the result
+    //     template.innerHTML = html;
+    //     return template.content.firstChild;
+    // }
+
+    function clearRecipleList() {
+        let parent = document.getElementById("recipe-page")
+        while (parent.firstChild) {
+            parent.removeChild(parent.firstChild)
+        }
+    }
+
+
+
+    document.querySelectorAll('.recipes').forEach(function (recipe) {
+
+        recipe.addEventListener("click", function (e) {
+
+            e.preventDefault()
+            let list = e.target.id
+            if (cuisine == list) {
+                return
+            }
+            cuisine = list
+            // before we generate html lets us empty the apge 
+            clearRecipleList()
+
+            getRecipesByList(list).then(function (response) {
+                console.log(response);
+                response.results.map(recipe => {
+                    let card = generateCardTemplate(recipe)
+                    document.getElementById("recipe-page").append(card)
+                })
+            })
+        })
+    })
 
     function showRecipePage() {
         cardContent.classList.add('hide')
@@ -283,33 +355,11 @@ window.addEventListener("load", function () {
             console.log(e.target.id)
 
             let zip = e.target.id;
-            // let zip;
-
-            // let list = e.target.id
             if (city == zip) {
                 return
             }
             city = zip
             console.log(city);
-            // switch (city) {
-
-            //     case "irvine":
-            //         zip = "92602";
-            //         break;
-                // case "anaheim":
-                //     zip = "92801";
-                //     break;
-
-                // default:
-                //     zip = "92806";
-                //     break;
-            // })
-            // let list = e.target.id
-            // if (city == zip_code) {
-            //     return
-            // }
-            // city = zip_code
-            // // before we generate html lets us empty the apge 
             clearRestaurantList()
 
             getRestaurant(zip).then(function (response) {
@@ -353,20 +403,6 @@ window.addEventListener("load", function () {
             })
     
         }) */
-
-    // document.querySelector('.card').innerHTML = '';
-
-
-    //  function italianGroup() {
-
-    //    var italianFood = document.createElement('p');
-    //   italianFood.textContent = "sad";
-
-    //   document.querySelector('.card').appendChild(italianFood);
-
-    //  }
-
-    //  document.getElementById('italian').addEventListener('click', italianGroup);
 
 })
 
